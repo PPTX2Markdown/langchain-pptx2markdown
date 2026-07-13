@@ -1,0 +1,47 @@
+---
+title: PPTX2Markdown
+---
+
+# PPTX2Markdown
+
+`PPTX2MarkdownLoader` loads local PowerPoint `.pptx` files as one LangChain
+`Document` per slide. It uses deterministic native OOXML parsing and preserves
+tables, charts, SmartArt, formulas, slide inheritance, and speaker notes.
+
+<Warning>
+This is an independently maintained community integration. LangChain does not
+review, maintain, or endorse it.
+</Warning>
+
+## Installation
+
+```bash
+pip install langchain-pptx2markdown
+```
+
+## Usage
+
+```python
+from langchain_pptx2markdown import PPTX2MarkdownLoader
+
+loader = PPTX2MarkdownLoader("deck.pptx")
+documents = loader.load()
+
+for document in loader.lazy_load():
+    print(document.metadata["slide_number"], document.page_content)
+```
+
+Hidden slides and speaker notes are included by default. Images and attachments are
+omitted by default so returned content never points to deleted temporary files. Set
+`assets="copy"` with a persistent `asset_dir` to retain them.
+
+## Parameters
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `file_path` | required | Local `.pptx` path |
+| `include_hidden` | `True` | Include hidden slides |
+| `include_notes` | `True` | Append speaker notes |
+| `include_empty` | `False` | Return empty slides |
+| `assets` | `"omit"` | Omit or persist assets |
+| `asset_dir` | `None` | Required for `assets="copy"` |
